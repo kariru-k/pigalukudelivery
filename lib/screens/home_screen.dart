@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pigalukudelivery/screens/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String id = "home-screen";
@@ -12,7 +13,9 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
             onPressed: (){
-              FirebaseAuth.instance.signOut();
+              FirebaseAuth.instance.signOut().then((value){
+                Navigator.pushReplacementNamed(context, LoginScreen.id);
+              });
             },
             child: const Text("Home Screen")
         ),

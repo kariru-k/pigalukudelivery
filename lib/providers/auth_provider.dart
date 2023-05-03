@@ -13,14 +13,19 @@ class AuthProvider extends ChangeNotifier {
   bool isPicAvailable = false;
   final picker = ImagePicker();
   String? pickererror;
-  double? shopLatitude;
-  double? shopLongitude;
-  String? shopAddress;
-  String? shopStreet;
-  String? shopSubLocality;
-  String? shopLocality;
+  double? userLatitude;
+  double? userLongitude;
+  String? userAddress;
+  String? userStreet;
+  String? userSubLocality;
+  String? userLocality;
   String? error;
   String? email;
+
+  getEmail(email){
+    this.email = email;
+    notifyListeners();
+  }
 
   Future<File?> getImage() async {
     final pickedFile = await picker.pickImage(
@@ -63,24 +68,39 @@ class AuthProvider extends ChangeNotifier {
           desiredAccuracy: LocationAccuracy.high
       );
 
-    shopLatitude = position.latitude;
-    shopLongitude = position.longitude;
+    userLatitude = position.latitude;
+    userLongitude = position.longitude;
     notifyListeners();
 
     var addresses = await placemarkFromCoordinates(
-        shopLatitude!, shopLongitude!);
+        userLatitude!, userLongitude!);
     var first = addresses.first;
-    shopAddress = first.name;
-    shopStreet = first.street;
-    shopSubLocality = first.subLocality;
-    shopLocality = first.locality;
+    userAddress = first.name;
+    userStreet = first.street;
+    userSubLocality = first.subLocality;
+    userLocality = first.locality;
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+
+    if (user != null) {
+      print(user.uid);
+      DocumentReference deliverypersons = FirebaseFirestore.instance.collection("deliverypersons").doc(user.uid);
+      deliverypersons.update({
+        'location': GeoPoint(userLatitude!, userLongitude!),
+      });
+    } else{
+      print("nadaaaaa");
+    }
 
     notifyListeners();
 
-    return shopAddress;
+
+
+    return userAddress;
     }
 
-  Future<UserCredential?> registerVendor(email, password) async {
+  Future<UserCredential?> registerDeliveryPerson(email, password) async {
       this.email = email;
       notifyListeners();
 
@@ -108,7 +128,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
 
-  Future<UserCredential?> loginVendor(email, password) async {
+  Future<UserCredential?> loginDeliveryPerson(email, password) async {
     this.email = email;
     notifyListeners();
 
@@ -143,36 +163,25 @@ class AuthProvider extends ChangeNotifier {
       }
   }
 
-  Future<void> saveVendorataToDb({
+  Future<void> saveDeliveryPersonDataToDb({
     String? url,
-    String? shopName,
-    String? ownerName,
-    String? ownerNumber,
-    String? storePhoneNumber,
-    String? description
+    String? name,
+    String? phoneNumber,
+    String? email,
   }) async {
+
     User? user = FirebaseAuth.instance.currentUser;
 
-    DocumentReference vendors = FirebaseFirestore.instance
-        .collection("vendors")
-        .doc(user?.uid);
+    DocumentReference deliverypersons = FirebaseFirestore.instance.collection("deliverypersons").doc(email);
 
-    vendors.set({
-      'uid': user?.uid,
+    deliverypersons.set({
+      'uid': user!.uid,
       'url': url,
-      'shopName': shopName,
-      'ownerName': ownerName,
+      'name': name,
       'email': email,
-      'ownerNumber': ownerNumber,
-      'storePhoneNumber': storePhoneNumber,
-      'description': description,
-      'address': "$shopAddress, $shopLocality",
-      'location': GeoPoint(shopLatitude!, shopLongitude!),
-      'shopOpen': true,
-      'rating': 0.00,
-      'totalRating': 0,
-      'isTopPicked': false,
-      'accVerified': false
+      'phoneNumber': phoneNumber,
+      'location': GeoPoint(userLatitude!, userLongitude!),
+      "accVerified": false
     });
 
     return;

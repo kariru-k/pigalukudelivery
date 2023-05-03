@@ -186,23 +186,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             services.validateUser(_emailTextController.text).then((value){
                               if (value.exists) {
                                 EasyLoading.show(status: "Please Wait");
-                                if (value["password"] == _passwordTextController.text) {
-                                  authData.loginDeliveryPerson(_emailTextController.text, _passwordTextController.text).then((credential){
-                                    if(credential != null){
-                                      EasyLoading.showSuccess("Successfully logged in", duration: const Duration(seconds: 3)).then((value){
-                                        Navigator.pushReplacementNamed(context, HomeScreen.id);
-                                      });
+                                authData.loginDeliveryPerson(_emailTextController.text, _passwordTextController.text).then((credential){
+                                  if(credential != null){
+                                    EasyLoading.showSuccess("Successfully logged in", duration: const Duration(seconds: 3)).then((value){
+                                      Navigator.pushReplacementNamed(context, HomeScreen.id);
+                                    });
                                     } else {
-                                      EasyLoading.showInfo("You need to complete registration first").then((value){
-                                        authData.getEmail(_emailTextController.text);
-                                        Navigator.pushNamed(context, RegisterScreen.id);
-                                      });
+                                      EasyLoading.showError(authData.error.toString(), duration: const Duration(seconds: 2));
                                     }
                                   });
-                                  EasyLoading.dismiss();
-                                } else {
-                                  EasyLoading.showError("Password is incorrect", duration: const Duration(seconds: 3));
-                                }
+                                EasyLoading.dismiss();
                               } else {
                                 EasyLoading.showError("Sorry, No user exists with this email", duration: const Duration(seconds: 3));
                               }
