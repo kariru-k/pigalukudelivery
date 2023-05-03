@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pigalukudelivery/screens/home_screen.dart';
+import 'package:pigalukudelivery/screens/login_screen.dart';
+import 'package:pigalukudelivery/screens/reset_password_screen.dart';
 import 'package:pigalukudelivery/screens/splash_screen.dart';
 
 import 'firebase_options.dart';
@@ -20,11 +23,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Piga Luku Delivery App',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+          primarySwatch: Colors.deepPurple,
+          fontFamily: "Lato"
       ),
       initialRoute: SplashScreen.id,
       routes: {
-        SplashScreen.id:(context) =>const SplashScreen()
+        SplashScreen.id:(context) =>const SplashScreen(),
+        LoginScreen.id: (context) => const LoginScreen(),
+        HomeScreen.id: (context) => const HomeScreen(),
+        ResetPassword.id: (context) => const ResetPassword(),
       },
     );
   }

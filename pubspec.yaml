@@ -15,6 +15,8 @@ dependencies:
   cupertino_icons: ^1.0.5
   firebase_auth:
   firebase_core:
+  flutter_launcher_icons:
+  email_validator:
 
 dev_dependencies:
   flutter_test:
@@ -22,7 +24,7 @@ dev_dependencies:
 
   flutter_lints: ^2.0.1
 
-flutter_icons:
+flutter_launcher_icons:
   image_path: "images/pigaluku_logo.png"
   android: true
   ios: true
@@ -45,17 +47,16 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Bold.ttf
+          weight: 700
+        - asset: fonts/Lato-Regular.ttf
+
+    - family: Anton
+      fonts:
+        - asset: fonts/Anton-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
