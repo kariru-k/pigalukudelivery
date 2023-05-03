@@ -31,7 +31,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: (){
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back_sharp)
         ),

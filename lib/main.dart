@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pigalukudelivery/providers/auth_provider.dart';
 import 'package:pigalukudelivery/screens/home_screen.dart';
 import 'package:pigalukudelivery/screens/login_screen.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Piga Luku Delivery App',
+      builder: EasyLoading.init(),
       theme: ThemeData(
           primarySwatch: Colors.deepPurple,
           fontFamily: "Lato"

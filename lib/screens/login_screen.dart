@@ -1,6 +1,12 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pigalukudelivery/screens/reset_password_screen.dart';
+import 'package:pigalukudelivery/services/firebase_services.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_provider.dart';
+import 'home_screen.dart';
 // import 'package:pigalukuvendors/providers/auth_provider.dart';
 // import 'package:pigalukuvendors/screens/home_screen.dart';
 // import 'package:pigalukuvendors/screens/register_screen.dart';
@@ -17,6 +23,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  FirebaseServices services = FirebaseServices();
   final _formKey = GlobalKey<FormState>();
   Icon? icon;
   bool _visible = false;
@@ -27,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final authData = Provider.of<AuthProvider>(context);
+    final authData = Provider.of<AuthProvider>(context);
 
 
     scaffoldMessage(message){
@@ -77,6 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20,),
                     TextFormField(
                       controller: _emailTextController,
+                      keyboardType: TextInputType.emailAddress,
                       validator: (value){
                         if(value!.isEmpty){
                           return "Enter Email";
@@ -131,7 +139,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: _visible == false ? true : false,
                       decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(),
-                          focusColor: Theme.of(context).primaryColor,
                           errorBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                                 style: BorderStyle.solid,
@@ -139,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.redAccent
                             ),
                           ),
+                          focusColor: Theme.of(context).primaryColor,
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                               borderSide: BorderSide(
@@ -147,16 +155,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Theme.of(context).primaryColor
                               )
                           ),
-                        contentPadding: EdgeInsets.zero,
-                        hintText: "Password",
-                        prefixIcon: const Icon(Icons.vpn_key_outlined),
-                        suffixIcon: IconButton(
-                          icon: _visible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _visible = !_visible;
-                            });
-                          },
+                          contentPadding: EdgeInsets.zero,
+                          hintText: "Password",
+                          prefixIcon: const Icon(Icons.vpn_key_outlined),
+                          suffixIcon: IconButton(
+                            icon: _visible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _visible = !_visible;
+                              });
+                            },
                         )
                       ),
                     ),
@@ -167,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Expanded(
                           child: TextButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(context, ResetPassword.id);
+                                Navigator.pushNamed(context, ResetPassword.id);
                               },
                               child: const Text(
                                 "Forgot Password?",
@@ -190,24 +198,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         onPressed: () {
                           if(_formKey.currentState!.validate()){
-                            setState(() {
-                              _loading = true;
+                            services.validateUser(_emailTextController.text).then((value){
+                              if (value.exists) {
+                                EasyLoading.show(status: "Please Wait");
+                                if (value["password"] == _passwordTextController.text) {
+                                  EasyLoading.show(status: "Logging in...Please Wait");
+                                  EasyLoading.dismiss();
+                                } else {
+                                  EasyLoading.showError("Password is incorrect", duration: const Duration(seconds: 3));
+                                }
+                              } else {
+                                EasyLoading.showError("Sorry, No user exists with this email", duration: const Duration(seconds: 3));
+                              }
                             });
-                            // authData.loginVendor(_emailTextController.text, _passwordTextController.text).then((credential){
-                            //   if(credential != null){
-                            //     setState(() {
-                            //       _loading = false;
-                            //     });
-                            //     Navigator.pushReplacementNamed(context, HomeScreen.id);
-                            //   } else {
-                            //     setState(() {
-                            //       _loading = false;
-                            //     });
-                            //     scaffoldMessage(authData.error);
-                            //   }
-                            // });
-                          } else {
-                            scaffoldMessage("Error brother");
                           }
                         },
                         child: _loading ?  const LinearProgressIndicator(
