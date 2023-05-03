@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pigalukudelivery/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'home_screen.dart';
 import 'login_screen.dart';
@@ -40,6 +42,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var authData = Provider.of<AuthProvider>(context);
+
+    authData.getCurrentAddress();
+
+
     return Scaffold(
       body: Center(
           child: Column(

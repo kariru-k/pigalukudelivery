@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pigalukudelivery/providers/auth_provider.dart';
 import 'package:pigalukudelivery/screens/home_screen.dart';
 import 'package:pigalukudelivery/screens/login_screen.dart';
+import 'package:pigalukudelivery/screens/register_screen.dart';
 import 'package:pigalukudelivery/screens/reset_password_screen.dart';
 import 'package:pigalukudelivery/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async{
+  Provider.debugCheckInvalidValueType = null;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MultiProvider(
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.id: (context) => const LoginScreen(),
         HomeScreen.id: (context) => const HomeScreen(),
         ResetPassword.id: (context) => const ResetPassword(),
+        RegisterScreen.id: (context) => const RegisterScreen(),
       },
     );
   }

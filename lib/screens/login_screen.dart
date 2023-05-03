@@ -1,17 +1,13 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pigalukudelivery/screens/register_screen.dart';
 import 'package:pigalukudelivery/screens/reset_password_screen.dart';
 import 'package:pigalukudelivery/services/firebase_services.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/auth_provider.dart';
 import 'home_screen.dart';
-// import 'package:pigalukuvendors/providers/auth_provider.dart';
-// import 'package:pigalukuvendors/screens/home_screen.dart';
-// import 'package:pigalukuvendors/screens/register_screen.dart';
-// import 'package:pigalukuvendors/screens/reset_password_screen.dart';
-// import 'package:provider/provider.dart';
+
 
 class LoginScreen extends StatefulWidget {
   static const String id = "login-screen";
@@ -29,22 +25,11 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _visible = false;
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-  bool _loading = false;
 
 
   @override
   Widget build(BuildContext context) {
     final authData = Provider.of<AuthProvider>(context);
-
-
-    scaffoldMessage(message){
-      return ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(message)
-          )
-      );
-    }
-
     return SafeArea(
       child: Scaffold(
         body: Form(
@@ -202,7 +187,18 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value.exists) {
                                 EasyLoading.show(status: "Please Wait");
                                 if (value["password"] == _passwordTextController.text) {
-                                  EasyLoading.show(status: "Logging in...Please Wait");
+                                  authData.loginDeliveryPerson(_emailTextController.text, _passwordTextController.text).then((credential){
+                                    if(credential != null){
+                                      EasyLoading.showSuccess("Successfully logged in", duration: const Duration(seconds: 3)).then((value){
+                                        Navigator.pushReplacementNamed(context, HomeScreen.id);
+                                      });
+                                    } else {
+                                      EasyLoading.showInfo("You need to complete registration first").then((value){
+                                        authData.getEmail(_emailTextController.text);
+                                        Navigator.pushNamed(context, RegisterScreen.id);
+                                      });
+                                    }
+                                  });
                                   EasyLoading.dismiss();
                                 } else {
                                   EasyLoading.showError("Password is incorrect", duration: const Duration(seconds: 3));
@@ -213,10 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             });
                           }
                         },
-                        child: _loading ?  const LinearProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                          backgroundColor: Colors.transparent,
-                        ): const Text(
+                        child: const Text(
                           "LOG IN",
                           style: TextStyle(
                             fontWeight: FontWeight.bold
@@ -228,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextButton(
                         child: const Text("Register Instead"),
                         onPressed: () {
-                          // Navigator.pushReplacementNamed(context, RegisterScreen.id);
+                          Navigator.pushReplacementNamed(context, RegisterScreen.id);
                         },
                       ),
                     )

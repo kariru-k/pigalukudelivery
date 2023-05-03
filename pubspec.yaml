@@ -24,6 +24,7 @@ dependencies:
   location:
   geocoding:
   flutter_easyloading:
+  firebase_storage:
 
 
 dev_dependencies:
