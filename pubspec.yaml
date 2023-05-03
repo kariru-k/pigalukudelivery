@@ -17,6 +17,14 @@ dependencies:
   firebase_core:
   flutter_launcher_icons:
   email_validator:
+  provider:
+  image_picker:
+  cloud_firestore:
+  geolocator:
+  location:
+  geocoding:
+  flutter_easyloading:
+
 
 dev_dependencies:
   flutter_test:
