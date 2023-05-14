@@ -25,6 +25,11 @@ dependencies:
   geocoding:
   flutter_easyloading:
   firebase_storage:
+  url_launcher:
+  cached_network_image:
+  intl:
+  chips_choice:
+  map_launcher:
 
 
 dev_dependencies:

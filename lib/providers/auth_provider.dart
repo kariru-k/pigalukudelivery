@@ -84,13 +84,11 @@ class AuthProvider extends ChangeNotifier {
 
 
     if (user != null) {
-      print(user.uid);
-      DocumentReference deliverypersons = FirebaseFirestore.instance.collection("deliverypersons").doc(user.uid);
+      DocumentReference deliverypersons = FirebaseFirestore.instance.collection("deliverypersons").doc(user.email);
       deliverypersons.update({
         'location': GeoPoint(userLatitude!, userLongitude!),
       });
     } else{
-      print("nadaaaaa");
     }
 
     notifyListeners();
