@@ -46,7 +46,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     authData.getCurrentAddress();
 
-
     return Scaffold(
       body: Center(
           child: Column(

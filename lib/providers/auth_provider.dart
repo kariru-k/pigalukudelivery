@@ -121,7 +121,6 @@ class AuthProvider extends ChangeNotifier {
         error = e.toString();
         notifyListeners();
       }
-
       return userCredential;
   }
 
